@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Discrete Math Calculator
 
 A comprehensive calculator for discrete mathematics that works both online and offline.
@@ -51,3 +52,8 @@ A minimal MCP (Math Control Protocol) server is provided in `mcp_server/server.p
 - The server listens on port 5050 by default.
 
 Ready for further MCP protocol and API expansion.
+=======
+# Testing Git
+
+This to third branch
+>>>>>>> 84cc1acb7d19357f8043050f8d8f0d69b98f8b47

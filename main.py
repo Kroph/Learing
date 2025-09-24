@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import sys
 from logic import propositional, predicate
 from set_theory import set_operations, relations
@@ -1229,3 +1230,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+=======
+print("Hello, 2 commit!")
+>>>>>>> 84cc1acb7d19357f8043050f8d8f0d69b98f8b47
