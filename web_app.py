@@ -16,7 +16,6 @@ if project_root_dir not in sys.path:
     sys.path.insert(0, project_root_dir)
 
 from flask import Flask, render_template, request, jsonify, send_from_directory, send_file, session
-import os
 import sys
 from automata.dfa import DFA
 from automata.nfa import NFA
@@ -1284,8 +1283,8 @@ def api_chatbot():
         messages = data.get('messages')
         if not messages or not isinstance(messages, list):
             return jsonify({'error': 'Missing or invalid messages'}), 400
+            
         from openai import OpenAI
-        import os
         api_key = os.environ.get("OPENROUTER_API_KEY")
         
         client = OpenAI(
@@ -1293,14 +1292,14 @@ def api_chatbot():
             api_key=api_key,
         )
         completion = client.chat.completions.create(
-            model="gpt-3",
+            model="gpt-4",
             messages=messages
         )
         reply = completion.choices[0].message.content.strip()
         return jsonify({'reply': reply})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
+    
 @app.route('/api/number_theory', methods=['POST'])
 def api_number_theory():
     try:
