@@ -69,41 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(chatbotBtnStyle);
 
-    const chatbotWidget = document.createElement('div');
-    chatbotWidget.id = 'chatbot-widget';
-    chatbotWidget.innerHTML = `
-        <div id="chatbot-header">
-            <div class="chatbot-header-left">
-                <span class="chatbot-logo"><i class="fas fa-robot"></i></span>
-                <span class="chatbot-title">Discrete Math AI</span>
-            </div>
-            <span id="chatbot-close">&times;</span>
-        </div>
-        <div id="chatbot-messages"></div>
-        <form id="chatbot-form" autocomplete="off">
-            <input id="chatbot-input" type="text" placeholder="Ask a discrete math question..." maxlength="500" autocomplete="off">
-            <button type="submit" title="Send"><i class="fas fa-paper-plane"></i></button>
-        </form>
-        <div id="chatbot-footer">
-            <span class="powered-by">Powered by <span class="openrouter-badge">OpenRouter AI</span></span>
-        </div>
-    `;
-    document.body.appendChild(chatbotWidget);
-
-    const messagesDiv = document.getElementById('chatbot-messages');
-    const form = document.getElementById('chatbot-form');
-    const input = document.getElementById('chatbot-input');
-
-    chatbotBtn.onclick = () => {
-        chatbotWidget.style.display = 'flex';
-        chatbotBtn.style.display = 'none';
-        setTimeout(() => { input.focus(); }, 200);
-    };
-    document.getElementById('chatbot-close').onclick = () => {
-        chatbotWidget.style.display = 'none';
-        chatbotBtn.style.display = 'block';
-    };
-
     let conversation = [];
     let typingIndicator = null;
 
