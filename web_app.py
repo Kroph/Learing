@@ -1282,26 +1282,67 @@ def api_chatbot():
     try:
         data = request.get_json()
         messages = data.get('messages')
+        
         if not messages or not isinstance(messages, list):
             return jsonify({'error': 'Missing or invalid messages'}), 400
+
+        # Get API key from environment variable
+        api_key = os.environ.get("OPENROUTER_API_KEY")
+        
+        if not api_key:
+            return jsonify({'error': 'OpenRouter API key not configured. Please set OPENROUTER_API_KEY environment variable.'}), 500
+
+        # Remove any hardcoded API key and use only environment variable
+        print(f"[DEBUG] Using API key: {api_key[:8]}...{api_key[-4:] if len(api_key) > 12 else '****'}")
+
         from openai import OpenAI
+        
+        # Initialize OpenAI client with OpenRouter
         client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
-            api_key="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",
+            api_key=api_key,
         )
+
+        # Make the API call
         completion = client.chat.completions.create(
             extra_headers={
-                "HTTP-Referer": "http://localhost:5000",
+                "HTTP-Referer": "http://localhost:5000",  # Update this to your actual domain in production
                 "X-Title": "Discrete Math Calculator",
             },
-            extra_body={},
-            model="deepseek/deepseek-chat-v3-0324:free",
-            messages=messages
+            model="deepseek/deepseek-chat-v3-0324:free",  # You can also try other free models
+            messages=messages,
+            max_tokens=1000,  # Add reasonable limits
+            temperature=0.7
         )
+
         reply = completion.choices[0].message.content.strip()
         return jsonify({'reply': reply})
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        # Better error logging
+        print(f"[ERROR] Chatbot API error: {str(e)}")
+        
+        # Check if it's an authentication error
+        if "401" in str(e) or "User not found" in str(e):
+            return jsonify({
+                'error': 'Authentication failed. Please check your OpenRouter API key.',
+                'details': 'The API key may be invalid, expired, or not properly set.'
+            }), 401
+        elif "403" in str(e):
+            return jsonify({
+                'error': 'Access forbidden. Your API key may not have permission for this model.',
+                'details': str(e)
+            }), 403
+        elif "429" in str(e):
+            return jsonify({
+                'error': 'Rate limit exceeded. Please try again later.',
+                'details': str(e)
+            }), 429
+        else:
+            return jsonify({
+                'error': f'Chatbot service error: {str(e)}',
+                'details': 'Please try again or contact support if the issue persists.'
+            }), 500
 
 @app.route('/api/number_theory', methods=['POST'])
 def api_number_theory():
